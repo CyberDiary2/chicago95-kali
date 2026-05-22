@@ -176,13 +176,16 @@ install_go_tools() {
 }
 
 # ── python tools ──────────────────────────────────────────────────────────────
+VENV="$HOME/.venv/pentest"
+
 install_python_tools() {
-    log "installing python tools"
-    pipx install trufflehog 2>/dev/null || warn "trufflehog failed, skipping"
-    pipx install arjun       2>/dev/null || warn "arjun failed, skipping"
-    pipx install jwt_tool    2>/dev/null || warn "jwt_tool failed, skipping"
-    pipx install uro         2>/dev/null || warn "uro failed, skipping"
-    pip3 install --user --break-system-packages \
+    log "creating pentest venv at $VENV"
+    python3 -m venv "$VENV"
+    local pip="$VENV/bin/pip"
+
+    log "installing python libraries into venv"
+    "$pip" install -q --upgrade pip
+    "$pip" install -q \
         requests \
         httpx \
         beautifulsoup4 \
@@ -192,10 +195,13 @@ install_python_tools() {
         dnspython \
         paramiko \
         impacket \
-        pwntools 2>/dev/null || \
-    pip3 install --user \
-        requests httpx beautifulsoup4 lxml \
-        censys shodan dnspython paramiko impacket pwntools
+        pwntools
+
+    log "installing pipx cli tools"
+    pipx install trufflehog 2>/dev/null || warn "trufflehog failed, skipping"
+    pipx install arjun       2>/dev/null || warn "arjun failed, skipping"
+    pipx install jwt_tool    2>/dev/null || warn "jwt_tool failed, skipping"
+    pipx install uro         2>/dev/null || warn "uro failed, skipping"
 }
 
 # ── amass ─────────────────────────────────────────────────────────────────────
@@ -283,7 +289,7 @@ setup_lightdm() {
 
 # ── shell PATH additions ───────────────────────────────────────────────────────
 append_path() {
-    local line='export PATH="$PATH:$HOME/go/bin:$HOME/.local/bin"'
+    local line='export PATH="$PATH:$HOME/go/bin:$HOME/.local/bin:$HOME/.venv/pentest/bin"'
     grep -qF "$line" "$HOME/.bashrc" || echo "$line" >> "$HOME/.bashrc"
 }
 
