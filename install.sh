@@ -46,38 +46,7 @@ setup_chicago95() {
     # ms core fonts for accuracy
     pkg ttf-mscorefonts-installer || true
 
-    log "applying xfce theme settings"
-    xfconf-query -c xsettings -p /Net/ThemeName          -s "Chicago95" --create -t string
-    xfconf-query -c xsettings -p /Net/IconThemeName       -s "Chicago95" --create -t string
-    xfconf-query -c xsettings -p /Gtk/CursorThemeName     -s "Chicago95 Cursor Black" --create -t string
-    xfconf-query -c xsettings -p /Gtk/FontName            -s "Sans 8" --create -t string
-    xfconf-query -c xsettings -p /Xft/Antialias           -s "0" --create -t int
-    xfconf-query -c xsettings -p /Xft/HintStyle           -s "hintnone" --create -t string
-
-    xfconf-query -c xfwm4 -p /general/theme               -s "Chicago95" --create -t string
-    xfconf-query -c xfwm4 -p /general/title_font          -s "Sans Bold 8" --create -t string
-    xfconf-query -c xfwm4 -p /general/button_layout       -s "O|SHMC" --create -t string
-
-    xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVGA-1/workspace0/color-style \
-        -s 0 --create -t int
-    xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVGA-1/workspace0/rgba1 \
-        -s "0.000000;0.000000;0.501961;1.000000" --create -t string
-
-    log "chicago95 applied"
-}
-
-# ── panel (windows 95 taskbar) ────────────────────────────────────────────────
-setup_panel() {
-    log "configuring panel as win95 taskbar"
-    xfconf-query -c xfce4-panel -p /panels -n -t int -s 1
-    xfconf-query -c xfce4-panel -p /panels/panel-1/position        -s "p=8;x=0;y=0" --create -t string
-    xfconf-query -c xfce4-panel -p /panels/panel-1/size            -s 28 --create -t int
-    xfconf-query -c xfce4-panel -p /panels/panel-1/position-locked -s true --create -t bool
-    xfconf-query -c xfce4-panel -p /panels/panel-1/length          -s 100 --create -t int
-    xfconf-query -c xfce4-panel -p /panels/panel-1/length-adjust   -s true --create -t bool
-    xfconf-query -c xfce4-panel -p /panels/panel-1/background-style -s 1 --create -t int
-    xfconf-query -c xfce4-panel -p /panels/panel-1/background-color \
-        -s "#c0c0c0" --create -t string
+    log "chicago95 files installed -- run ./apply-theme.sh from inside XFCE to activate"
 }
 
 # ── dotfiles ──────────────────────────────────────────────────────────────────
@@ -325,7 +294,6 @@ main() {
     apt_update
     install_base
     setup_chicago95
-    setup_panel
     deploy_dots
     install_pentest
     install_go_tools
@@ -337,7 +305,7 @@ main() {
     setup_plymouth
     setup_lightdm
 
-    log "done. reboot to see grub + boot splash + login screen."
+    log "done. reboot, log into XFCE, then run: bash apply-theme.sh"
     log "run 'nuclei -update-templates' after first launch."
 }
 
